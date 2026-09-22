@@ -26,16 +26,60 @@ const renderSidebar = () => {
     const addBtn = document.createElement('button');
     addBtn.textContent = 'ADD'
     const listContainer = document.createElement('ul');
+
+    const modalBg = document.createElement('div');
+    modalBg.classList.add('modal-bg');
+    const modal = document.createElement('div');
+    modal.classList.add('modal');
+
+    let modalHeader = document.createElement('h2');
+    modalHeader.textContent = 'Create a Task';
+    let title = document.createElement('input');
+    title.id = 'title';
+    title.placeholder = 'Add Your Task...';
+    let description = document.createElement('textarea')
+    description.placeholder = 'Description' ;
+    let dueDate = document.createElement('input')
+    dueDate.type = 'date';
+    let createBtn = document.createElement('button')
+    createBtn.textContent = 'CREATE';
+    let close = document.createElement('span');
+    close.classList.add('modal-close')
+    close.textContent = '\u00d7';
+    
+
+    modal.append(modalHeader, title, description, dueDate, createBtn, close);
+    modalBg.appendChild(modal);
     
     fetchData(listContainer);
 
+    const openModal = () => {
+        modalBg.classList.add('bg-active')
+    }
 
-    addBtn.addEventListener('click', () => addTask(inputBox, listContainer));
+    inputBox.addEventListener('click', openModal); 
+    addBtn.addEventListener('click', openModal);
+
+    close.addEventListener('click', () => {
+        modalBg.classList.remove('bg-active'); 
+    })
+
+    //create task inside a Modal
+
+    createBtn.addEventListener('click', () => {
+        if (title.value.trim() !== '') {
+            addTask(title, listContainer);
+            title.value = '';
+            description.value = '';
+            modalBg.classList.remove('bg-active');
+        }
+    });
+
     listContainer.addEventListener('click', (e) => handleListClick(e, listContainer));
 
     row.append(inputBox, addBtn)
     taskDiv.append(headerText, row, listContainer)
-    sidebar.append(header,taskDiv);
+    sidebar.append(header,taskDiv, modalBg);
 
     appContainer.appendChild(sidebar);
 }

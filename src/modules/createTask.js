@@ -7,18 +7,13 @@ export function fetchData (listContainer){
 }
 
 export function addTask(inputBox, listContainer){
-    if(inputBox.value === ''){
-        alert("Write a TASK!!!")
-    }else {
-        const li = document.createElement('li');
-        li.textContent = inputBox.value;
-        listContainer.appendChild(li)
-        let span = document.createElement('span');
-        span.innerHTML = '\u00d7';
-
+    if(!inputBox.value.trim()) return;
+    const li = document.createElement('li');
+    li.textContent = inputBox.value;
+    let span = document.createElement('span');
+    span.innerHTML = '\u00d7';
         li.appendChild(span);
-        listContainer.appendChild(li)
-    }
+    listContainer.appendChild(li)
     inputBox.value = '';
     saveData(listContainer);
 }
