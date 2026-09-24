@@ -1,7 +1,7 @@
 export const createProjects = (name) => {
     const todos = [];
 
-    const addtodo = (todo) => {
+    const addTodo = (todo) => {
         todos.push(todo)
     };
 
@@ -15,6 +15,6 @@ export const createProjects = (name) => {
 
     return {
         name,
-        addtodo, removoTodo, getTodos,
+        addTodo, removoTodo, getTodos,
     };
 };
