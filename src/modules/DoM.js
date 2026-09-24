@@ -1,51 +1,35 @@
 import { fetchData, addTask, handleListClick } from "./createTask.js";
 
 const appContainer = document.querySelector(".app-container");
-const createDOM = (element, nodeClass, text) => {
+const createDOM = (element, {nodeClass, nodeId, text, placeholder} = {}) => {
     const node = document.createElement(element);
-    if (nodeClass){
-        node.classList.add(nodeClass)
-    }
+    if (nodeClass) node.classList.add(nodeClass)
+    if (nodeId) node.id = nodeId
+    if (placeholder) node.placeholder = placeholder;
     node.textContent = text;
     return node;
 }
 
 const renderSidebar = () => {
-    const sidebar = document.createElement('div');
-    sidebar.classList.add('sidebar');
-    const header = createDOM('h1', 'title', 'SIDEBAR');
-    const taskDiv = document.createElement('div');
-    taskDiv.classList.add('taskDiv');
-    const headerText = document.createElement('h2');
-    headerText.textContent= 'To-do List';
-    const row = document.createElement('div');
-    row.classList.add('row')
-    const inputBox = document.createElement('input')
-    inputBox.id = 'input-box';
-    inputBox.placeholder = 'Add your Task...'
-    const addBtn = document.createElement('button');
-    addBtn.textContent = 'ADD'
-    const listContainer = document.createElement('ul');
+    const sidebar = createDOM('div', {nodeClass: 'sidebar'});
+    const header = createDOM('h1', {nodeClass: 'title', text: 'SIDEBAR'});
+    const taskDiv = createDOM('div', {nodeClass: 'taskDiv'});    
+    const headerText = createDOM('h2', {text: 'To-do List'});
+    const row = createDOM('div', {nodeClass: 'row'});
+    const inputBox = createDOM('input', {nodeId: 'input-box', placeholder: 'Add your Task...'});
+    const addBtn = createDOM('button', {text: 'ADD'});
+    const listContainer = createDOM('ul');
 
-    const modalBg = document.createElement('div');
-    modalBg.classList.add('modal-bg');
-    const modal = document.createElement('div');
-    modal.classList.add('modal');
+    const modalBg = createDOM('div', {nodeClass: 'modal-bg'});
+    const modal = createDOM('div', {nodeClass: 'modal'});
 
-    let modalHeader = document.createElement('h2');
-    modalHeader.textContent = 'Create a Task';
-    let title = document.createElement('input');
-    title.id = 'title';
-    title.placeholder = 'Add Your Task...';
-    let description = document.createElement('textarea')
-    description.placeholder = 'Description' ;
+    let modalHeader = createDOM('h2', {text: 'Create a Task'});
+    let title = createDOM('input', {nodeId: 'title', placeholder: 'Add your Task...'});
+    let description = createDOM('textarea', {placeholder: 'Description'})
     let dueDate = document.createElement('input')
     dueDate.type = 'date';
-    let createBtn = document.createElement('button')
-    createBtn.textContent = 'CREATE';
-    let close = document.createElement('span');
-    close.classList.add('modal-close')
-    close.textContent = '\u00d7';
+    let createBtn = createDOM('button', {text: 'CREATE'});
+    let close = createDOM('span', {text: '\u00d7', nodeClass: 'modal-close'});
     
 
     modal.append(modalHeader, title, description, dueDate, createBtn, close);
@@ -85,9 +69,8 @@ const renderSidebar = () => {
 }
 
 const renderContent = () => {
-    const content = document.createElement('div');
-    content.classList.add('content');
-    const text = createDOM('h1', 'title', 'CONTENT');
+    const content = createDOM('div', {nodeClass: 'content'});
+    const text = createDOM('h1', {nodeClass:'title', text: 'CONTENT'});
 
     content.appendChild(text);
     appContainer.appendChild(content);
