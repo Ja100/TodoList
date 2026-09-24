@@ -5,7 +5,7 @@ export const createProjects = (name) => {
         todos.push(todo)
     };
 
-    const removoTodo = (index) => {
+    const removeTodo = (index) => {
         if (index >= 0 && index < todos.length) {
             todos.splice(index, 1);
         }
@@ -15,6 +15,6 @@ export const createProjects = (name) => {
 
     return {
         name,
-        addTodo, removoTodo, getTodos,
+        addTodo, removeTodo, getTodos,
     };
 };

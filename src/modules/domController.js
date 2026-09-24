@@ -1,3 +1,4 @@
+
 import { createTodo } from './todo.js';
 
 export const createDOMController = (appState) => {
@@ -65,7 +66,110 @@ const renderSidebar = () => {
     return sidebar;
 }
 
-const 
+const renderTodoItem = (todo, index) => {
+    const todoCard = createDOM('div');
+    const header = createDOM('div', {nodeClass: 'todo-header'});
+    const title = createDOM('h4', {nodeClass:'title', text: todo.title});
+    const dueDate = createDOM('span', {nodeClass: 'todo-date', text: todo.dueDate});
+    
+    header.append(title,dueDate);
+
+    //Expand details
+
+    const details = createDOM('div', 'todo-details');
+    details.style.display = 'none';
+
+    const description = createDOM('p', {nodeClass: 'todo-description', text: todo.description || 'No Description'});
+    details.appendChild(description);
+
+    //ACTIONS !!!
+
+    const actions = createDOM('div', {nodeClass: 'todo-actions'});
+    const expandBtn = createDOM('button', {nodeClass: 'expand-btn', text: 'Details'});
+    expandBtn.addEventListener('click', () => {
+        const isHidden = details.style.display === 'none';
+        details.style.display = isHidden ? 'block' : 'none';
+        expandBtn.textContent = isHidden ? 'Hide' : 'Details';
+    });
+
+    const deleteBtn = createDOM('button', {nodeClass: 'delete-btn', text: 'Delete'});
+    deleteBtn.addEventListener('click', () => {
+        appState.getActiveProject().removeTodo(index);
+        render();
+    });
+
+    actions.append(expandBtn,deleteBtn);
+    todoCard.append(header, details, actions);
+
+    return todoCard;
+}
+
+const renderTodoForm = () => {
+    const form = createDOM('form', {nodeClass: 'todo-form', text: 'Add a Task'});
+    
+    const titleInput = createDOM('input', {nodeClass: 'todo-input', type: 'text', placeholder: 'Task Title'});
+    titleInput.required = true;
+
+    const descInput = createDOM('textarea', {nodeClass: 'todo-input-desc', placeholder: 'Task Title'});
+
+    const dateInput = createDOM('input', {type: 'date', placeholder: 'Task Title'});
+    dateInput.required = true;
+
+    const priority = createDOM('select');
+    ['low', 'medium', 'high'].forEach(p => {
+        const option = createDOM('option', {text: p.toUpperCase()});
+        option.value = p;
+        priority.appendChild(option);
+    });;
+
+    const submitBtn = createDOM('button', {text: 'Create a Task', type: 'submit'});
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const newToddo = createTodo({
+            title: titleInput.value.trim(),
+            description: descInput.value.trim(),
+            dueDate: dateInput.value,
+            priority: priority.value
+        });
+
+        appState.getActiveProject().addTodo(newToddo);
+        render();
+    });
+
+    form.append(titleInput, descInput, dateInput, priority, submitBtn);
+
+    return form;
+
+}
+
+const renderMainContent = () => {
+    const main = createDOM('main', {nodeClass: 'content'});
+    const activeProject = appState.getActiveProject();
+
+    const header = createDOM('h1', {text: activeProject.name});
+    main.appendChild(header);
+
+    //Fetching Task List 
+
+    const todoListContainer = createDOM('div', {nodeClass:'taskDiv'})
+    const todos = activeProject.getTodos();
+
+    if (todos.length === 0){
+        const emptyMsg = createDOM('p', {text: 'NO TASKS IN THIS PROJECT'})
+        todoListContainer.appendChild(emptyMsg);
+    } else {
+        todos.forEach( (todo, index) => {
+            todoListContainer.appendChild(renderTodoItem(todo, index));
+        });
+    }
+
+    main.append(todoListContainer, renderTodoForm());
+
+    return main;
+};
+
 
     // const taskDiv = createDOM('div', {nodeClass: 'taskDiv'});    
     // const headerText = createDOM('h2', {text: 'To-do List'});
@@ -123,9 +227,9 @@ const
 
 const render = () => {
     appContainer.innerHTML = '';
-    const layout = createDOM('div', 'app-layout');
+    const layout = createDOM('div', {nodeClass: 'app-layout'});
     layout.appendChild(renderSidebar());
-    //layout.appendChild(renderMainContent());
+    layout.appendChild(renderMainContent());
     appContainer.appendChild(layout);
   };
 
